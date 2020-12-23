@@ -7,7 +7,7 @@ import json
 import requests
 from requests.exceptions import RequestException
 
-def getData(type):
+def get_data(type):
     try:
         request = requests.post("https://www.thesilvermountain.nl/nl/rates/ajax/rate", { "type": type, "limit": 7, "cur": "eur", "unit": "ozt", })
         data = json.loads(request.text)
@@ -16,7 +16,7 @@ def getData(type):
     if not "rates" in data:
         return "???"
 
-    return str("{:.2f}".format(float(data["rates"][0]["val"])))
+    return str("€{:.2f}".format(float(data["rates"][0]["val"])))
 
 class Module(core.module.Module):
     @core.decorators.every(minutes=60)
@@ -26,7 +26,7 @@ class Module(core.module.Module):
         widget = self.widget()
 
     def status(self, widget):
-        gold_price = getData("gold")
-        silver_price = getData("silver")
-        return "Gold €{} Silver €{}".format(gold_price, silver_price)
+        goldprice = get_data("gold")
+        silverprice = get_data("silver")
+        return "Gold {} Silver {}".format(goldprice, silverprice)
 
